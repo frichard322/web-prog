@@ -1,0 +1,15 @@
+ <nav class="ui inverted menu">
+      <a href="/" class="item">Index</a>
+      <% if (user) {%>
+         <a href="/api/user/logout" class="item">Logout(<%= user.name%>)</a>
+         <a href="/view/event/event-form" class="item">Create event</a>
+         <a href="/view/event/list-my-events" class="item">List my events</a>
+         <!-- Ez csak azert van itt, hogy meg lehessen kulonboztetni a szervezo-t az admin-tol.-->
+         <% if (user.role === 'admin') {%>
+             <a href="/view/user/admin-panel" class="item">Admin Panel</a>
+         <% }%>
+      <% } else {%>
+      <a href="/view/user/login-form" class="item">Login</a>
+      <a href="/view/user/register-form" class="item">Register</a>
+      <% }%>
+ </nav>

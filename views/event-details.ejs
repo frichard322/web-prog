@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <%- include('partials/head.ejs')%>
+    <body>
+        <%- include('partials/navbar.ejs')%>
+        <main>
+            <div class="event-div">
+                Id: <%= event._id%>
+                <br>
+                Name: <%= event.name%>
+                <br>
+                Start time: <%= event.startTime%>
+                <br>
+                End time: <%= event.endTime%>
+                <br>
+                Location: <%= event.location%>
+                <br>
+                Owner: <%= event.owner%>
+                <br>
+                Organizers: <span id="organizers-list"><%= event.organizersList%></span>
+                <br>
+                <% if (user) {%>
+                    <span id="hidden-message" class="hidden"></span>
+                    <button class="ui secondary button" type="button" id="action-button" onclick="joinLeaveEvent('<%= event._id%>', '<%= user.name%>')"><%= button%></button>
+                    <br>
+                <% }%>
+                Tasks:
+                <% event.tasks.forEach((task) => {%>
+                    <div class="indented">
+                        Name: <%= task.name%>
+                        <i class="question circle icon"
+                           title="Added at: <%= new Date(task.addedAt).toString()%>
+Modified at: <%= new Date(task.modifiedAt).toString()%>
+<% if (task.state === 'solved') {%>Closed at:  <%= new Date(task.closedAt).toString()%><% }%>"></i>
+                    </div>
+                    <div class="indented">
+                        State: <%= task.state%>
+                        <button id="<%= event._id%>-<%= task.name%>-solver-button" class="ui secondary button mini"
+                                <% if (!user || !event.organizersList.includes(user.name) || !task.organizersList.includes(user.name) || task.state === 'solved') {%>style="display: none"<% }%>
+                                onclick="markAsSolved('<%= task.name%>', '<%= event._id%>')">
+                            <i class="linkify icon green"></i>
+                        </button>
+                    </div>
+                    <% if (task.state === 'solved') {%>
+                        <div class="indented">Solved by:  <%= task.solvedBy%></div>
+                    <% }%>
+                    <div class="indented">Organizers:  <span id="<%= event._id%>-<%= task.name%>"><%= task.organizersList.toString()%></span></div>
+                    <button id="<%= event._id%>-<%= task.name%>-join-button" class="ui icon secondary button tiny" title="Join task"
+                            <% if ( !user || task.state === 'solved' || (user && !event.organizersList.includes(user.name)) || (user && task.organizersList.includes(user.name))) {%> style="display: none" <% }%>
+                            onclick="joinLeaveTask('join', '<%= task.name%>', '<%= event._id%>', '<%if (user) {%><%= user.name%><% }%>')">
+                        <i class="plus icon green"></i>
+                    </button>
+                    <button id="<%= event._id%>-<%= task.name%>-leave-button" class="ui icon secondary button tiny" title="Leave task"
+                    <% if (!user || task.state === 'solved' || (user && !event.organizersList.includes(user.name)) || (user && !task.organizersList.includes(user.name))) {%> style="display: none" <% }%>
+                            onclick="joinLeaveTask('leave', '<%= task.name%>', '<%= event._id%>', '<%if (user) {%><%= user.name%><% }%>')">
+                        <i class="minus icon red"></i>
+                    </button>
+                    <br>
+                <% })%>
+                <br>
+                Photos:
+                <% if (user && (user.role === 'admin' || event.owner === user.name)) {%>
+                    <button class="ui icon secondary button" style="font-size: 75%" onclick="deleteSelectedPhotos('<%= event._id%>')">
+                        <i class="trash alternate outline icon"></i>
+                    </button>
+                <% }%>
+                <div class="photos-div">
+                    <%event.photos.forEach((path) => {%>
+                        <img src="/<%= path%>" alt="photo" id="<%= path%>" onclick="selectPhoto('<%= path%>')">
+                    <%})%>
+                </div>
+                <br>
+                <% if (error) {%>
+                    <p class="error-message">
+                        <%= error %>
+                    </p>
+                <%}%>
+                <% if (user) {%>
+                    <% if (event.owner === user.name) {%>
+                    <div id="formDiv">
+                        <form id="uploadForm" class="ui form" method="POST" action="/api/event/upload-photo" enctype="multipart/form-data">
+                            <input class="hidden" type="text" id="event-id" name="eventId" value="<%= event._id%>">
+                            <label for="uploader">Upload: </label>
+                            <input type="file" id="uploader" name="uploader">
+                            <br>
+                            <input type="submit" id="submit" class="ui secondary button" value="Submit">
+                            <br>
+                        </form>
+                    </div>
+                    <% }%>
+                <% }%>
+            </div>
+        </main>
+        <%- include('partials/footer.ejs')%>
+    </body>
+    <script src="/static_event_details.js"></script>
+</html>

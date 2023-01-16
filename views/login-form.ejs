@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <%- include('partials/head.ejs')%>
+    <body>
+        <%- include('partials/navbar.ejs')%>
+        <% if (error) {%>
+        <p class="error-message">
+            <%= error %>
+        </p>
+        <%}%>
+        <div id="form-div">
+            <form id="user-form" class="ui form" method="POST" action="/api/user/login">
+                <label for="name">Name: </label>
+                <input type="text" id="name" name="name" required>
+                <br>
+                <label for="password">Password: </label>
+                <input type="password" id="password" name="password" required>
+                <br>
+                <input type="submit" id="submit" class="ui secondary button" value="Login">
+                <br>
+            </form>
+        </div>
+    </body>
+</html>

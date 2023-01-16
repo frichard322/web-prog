@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <%- include('partials/head.ejs')%>
+    <body>
+        <%- include('partials/navbar.ejs')%>
+        <h1>My Events</h1>
+        <main>
+            <% if (!events.length) {%>
+            <div class="event-div">
+                There are no events related to you.
+            </div>
+            <% }%>
+            <% events.forEach(event => {%>
+            <div class="event-div">
+                Id: <%= event._id%>
+                <br>
+                Name: <%= event.name%>
+                <br>
+                Start time: <%= event.startTime%>
+                <br>
+                End time: <%= event.endTime%>
+                <br>
+                Location: <%= event.location%>
+                <br>
+                Owner: <%= event.owner%>
+                <br>
+                Organizers: <%= event.organizersList%>
+                <br>
+                Tasks:
+                <% event.tasks.forEach((task) => {%>
+                    <div class="indented">Name: <%= task.name%></div>
+                    <div class="indented">State: <%= task.state%></div>
+                    <div class="indented">Added at: <%= new Date(task.addedAt).toString()%></div>
+                    <div class="indented">Modified at: <%= new Date(task.modifiedAt).toString()%></div>
+                    <% if (task.state === 'solved') {%>
+                        <div class="indented">Closed at:  <%= new Date(task.closedAt).toString()%></div>
+                        <div class="indented">Solved by:  <%= task.solvedBy%></div>
+                    <% }%>
+                    <div class="indented">Organizers:  <%= task.organizersList.toString()%></div>
+                    <br>
+                <% })%>
+                <br>
+                Photos:
+                <div class="photos-div">
+                    <%event.photos.forEach((path) => {%>
+                        <img src="/<%= path%>" alt="photo">
+                    <%})%>
+                </div>
+            </div>
+            <% })%>
+        </main>
+        <%- include('partials/footer.ejs')%>
+    </body>
+</html>

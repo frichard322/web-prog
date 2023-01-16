@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <%- include('partials/head.ejs')%>
+    <body>
+        <%- include('partials/navbar.ejs')%>
+        <main>
+            <div>
+                <label class="ui label black large">Category:</label>
+                <select id="category-selector" class="ui dropdown" title="Select category" onchange="changeCategory()">
+                    <option class="item" value="users">Users</option>
+                    <option class="item" value="events">Events</option>
+                </select>
+            </div>
+            <br>
+            <div id="users-panel" style="display: block">
+                <label class="ui label black large">User:</label>
+                <select id="user-selector" class="ui dropdown" title="Select user" onchange="changeUser()">
+                    <option class="item" value="none">None</option>
+                    <% if (users) users.forEach((currUser) => {%>
+                        <% if (currUser.name !== user.name) {%>
+                            <option id="<%= currUser._id%>" class="item" value="<%= currUser._id%>+<%= currUser.role%>"><%= currUser.name%></option>
+                        <% }%>
+                    <% })%>
+                </select>
+                <button id="grant-button" class="ui icon secondary button tiny" title="Grant admin permission" style="display: none" onclick="grantPermission()">
+                    <i class="check icon green"></i>
+                </button>
+                <button id="deny-button" class="ui icon secondary button tiny" title="Deny admin permission" style="display: none" onclick="denyPermission()">
+                    <i class="close icon red"></i>
+                </button>
+                <button id="delete-button" class="ui icon secondary button tiny" title="Delete user" style="display: none" onclick="deleteUser()">
+                    <i class="trash alternate outline icon"></i>
+                </button>
+            </div>
+            <div id="events-panel" style="display: none">
+                <label class="ui label black large">Operation:</label>
+                <select id="operation-selector" class="ui dropdown" title="Select operation" onchange="changeOperation()">
+                    <option class="item" value="none">None</option>
+                    <option class="item" value="create task">Create task</option>
+                    <option class="item" value="stats">Stats</option>
+                </select>
+                <div id="task-form" class="ui form" style="display: none">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <br>
+                    <label for="eventId">Event:</label>
+                    <select id="event-selector-task" name="eventId" class="ui dropdown" title="Select event">
+                    <% if (events) events.forEach((event) => {%>
+                        <option id="task-<%= event._id%>" class="item" value="<%= event._id%>"><%= event.name%></option>
+                    <% })%>
+                    </select>
+                    <button type="button" id="task-button" class="ui secondary button" onclick="submitTask()">Submit</button>
+                </div>
+                <div id="stats-form" class="ui form" style="display: none">
+                    <label for="eventId">Event:</label>
+                    <select id="event-selector-stats" name="eventId" class="ui dropdown" title="Select event" onchange="changeStats()">
+                        <option class="item" value="none">None</option>
+                        <% if (events) events.forEach((event) => {%>
+                            <option id="stats-<%= event._id%>" class="item" value="<%= event._id%>"><%= event.name%></option>
+                        <% })%>
+                    </select>
+                    <div id="stats" style="display: none">
+                        Solved: <span id="solved-count"></span>
+                        <br>
+                        Unsolved: <span id="unsolved-count"></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <%- include('partials/footer.ejs')%>
+    </body>
+    <script src="/static_admin_panel.js"></script>
+</html>

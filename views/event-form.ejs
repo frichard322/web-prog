@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="hu">
+<%- include('partials/head.ejs')%>
+    <body>
+        <%- include('partials/navbar.ejs')%>
+        <% if (error) {%>
+        <p class="error-message">
+            <%= error %>
+        </p>
+        <%}%>
+        <div id="form-div">
+            <form id="event-form" class="ui form" method="POST" action="/api/event/create-event">
+                <label for="name">Name: </label>
+                <input type="text" id="name" name="name" placeholder="Name" required>
+                <br>
+                <label for="start-time">Starts at: </label>
+                <input type="time" id="start-time" name="startTime" min="00:00" max="23:59" required>
+                <br>
+                <label for="end-time">Ends at: </label>
+                <input type="time" id="end-time" name="endTime" min="00:00" max="23:59" required>
+                <br>
+                <label for="location">Location: </label>
+                <input type="text" id="location" name="location" placeholder="Location" required>
+                <br>
+                <input type="submit" id="submit" class="ui secondary button" value="Submit">
+                <br>
+            </form>
+        </div>
+        <%- include('partials/footer.ejs')%>
+    </body>
+</html>

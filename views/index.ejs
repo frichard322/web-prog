@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="hu">
+    <%- include('partials/head.ejs')%>
+    <body>
+        <%- include('partials/navbar.ejs')%>
+        <main>
+            <h1>Events</h1>
+            <div>
+                <% if (events.length === 0) {%>
+                    <div class="event-div">
+                        There are no events scheduled.
+                    </div>
+                <%}%>
+                <% events.forEach((event) => {%>
+                    <div class="event-div">
+                        <div id="<%= event._id%>">
+                            <%if (user && (user.role === 'admin' || event.owner === user.name)) {%>
+                            <div class="delete-button">
+                                <button class="ui icon secondary button" onclick="deleteEvent('<%= event._id%>')">
+                                    <i class="trash alternate outline icon"></i>
+                                </button>
+                            </div>
+                            <% }%>
+                            <%for (const [key, value] of Object.entries(event)){%>
+                                <a href="" onclick="showDetails(event,'<%= event._id%>')"><%= key%>: <%= value%></a>
+                                <br>
+                            <%}%>
+                        </div>
+                        <button type="button" class="ui secondary button" onclick="redirectToDetails('<%= event._id%>')">Details</button>
+                    </div>
+                <%})%>
+            </div>
+        </main>
+        <%- include('partials/footer.ejs')%>
+    </body>
+    <script src="static_index.js"></script>
+</html>
